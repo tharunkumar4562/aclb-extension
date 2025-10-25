@@ -1,0 +1,77 @@
+{
+    "manifest_version": 3,
+    "name": "ACLB - Adaptive Cognitive Load Balancer",
+    "version": "1.0.0",
+    "description": "AI-powered cognitive load monitoring for personalized focus assistance using Chrome Built-in AI",
+    "minimum_chrome_version": "116",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "alarms",
+        "notifications"
+    ],
+    "host_permissions": [
+        "https://*/*",
+        "http://*/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle",
+            "all_frames": false
+        }
+    ],
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_title": "ACLB Focus Assistant",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "lib/cognitive-engine.js"
+            ],
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ]
+        }
+    ],
+    "commands": {
+        "toggle-focus-mode": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+F",
+                "mac": "Command+Shift+F"
+            },
+            "description": "Toggle focus mode"
+        },
+        "generate-summary": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+S",
+                "mac": "Command+Shift+S"
+            },
+            "description": "Generate AI summary of current page"
+        }
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    }
+}

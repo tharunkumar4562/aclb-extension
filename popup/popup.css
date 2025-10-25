@@ -1,0 +1,1175 @@
+/* ACLB Popup CSS (MV3-safe, no @import) */
+
+/* Base */
+body {
+    width: 380px;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background-color: #111827;
+    color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Container */
+.container {
+    padding: 1rem;
+    position: relative;
+    background: #111827;
+    min-height: 500px;
+}
+
+/* Panels */
+.header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #374151;
+}
+
+.status-section,
+.feature-section,
+.summary-section,
+.plan-section {
+    margin: 8px 0 15px;
+    padding: 12px;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    background: #1e293b;
+}
+
+/* Status */
+.status-details {
+    font-size: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.status-label {
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.status-value {
+    font-weight: 600;
+}
+
+.status-value.connected,
+.status-value.ready,
+.status-value.available {
+    color: #10b981;
+}
+
+.status-value.disconnected,
+.status-value.unavailable {
+    color: #ef4444;
+}
+
+.status-value.initializing,
+.status-value.fallback {
+    color: #f59e0b;
+}
+
+/* ===== ENHANCED FOCUS MODE STATE SYNC STYLES ===== */
+.status-active {
+    color: #10B981;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #6B7280;
+}
+
+.status-message {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4F46E5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+/* Ensure toggle reflects actual state */
+#focusToggle:checked {
+    background-color: #10B981;
+}
+
+/* Actions */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 6px 12px;
+    font-size: 11px;
+    background: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+}
+
+.action-btn:hover {
+    background: #1976D2;
+    transform: translateY(-1px);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.success {
+    background: #10b981;
+}
+
+.action-btn.success:hover {
+    background: #059669;
+}
+
+.action-btn.warning {
+    background: #f59e0b;
+}
+
+.action-btn.warning:hover {
+    background: #d97706;
+}
+
+.action-btn.danger {
+    background: #ef4444;
+}
+
+.action-btn.danger:hover {
+    background: #dc2626;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: transform .15s ease, background .15s ease;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: #4b5563;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: background .15s ease, transform .15s ease;
+}
+
+.btn-secondary:hover {
+    background: #374151;
+}
+
+/* Charts and lists */
+.chart-container {
+    height: 100px;
+    min-height: 100px;
+    background: #1e293b;
+    border-radius: 6px;
+    margin: 8px 0;
+    padding: 8px;
+}
+
+.list-container {
+    max-height: 150px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background-color: #4B5563;
+    border-radius: 3px;
+}
+
+/* Overlay */
+#loading-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.98);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 8px;
+}
+
+/* Text utils */
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}
+
+/* Focus score */
+.focus-score-display {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.focus-score-value {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.focus-score-label {
+    font-size: 12px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+/* ADDED: Focus score element styling */
+.focus-score {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Status indicator */
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status-online {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.status-offline {
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+}
+
+.status-connecting {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+    animation: pulse 2s infinite;
+}
+
+/* Focus mode */
+.focus-mode-section {
+    margin: 15px 0;
+    padding: 15px;
+    background: #1e293b;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+}
+
+.focus-mode-section h3 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f3f4f6;
+    text-align: center;
+}
+
+.btn-toggle {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 6px;
+    background: #4CAF50;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
+.btn-toggle:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .25);
+}
+
+.btn-toggle:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+}
+
+.btn-toggle:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-toggle.loading {
+    background: #f59e0b;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    padding: 4px 0;
+}
+
+.status {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-loading {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.status-unknown {
+    color: #6b7280;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.badge-active {
+    background: #10b981;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(16, 185, 129, .3);
+}
+
+.badge-inactive {
+    background: #6b7280;
+    color: #fff;
+}
+
+.focus-mode-info {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Messages */
+.status-message {
+    padding: 12px 16px;
+    margin: 12px 0;
+    border-radius: 8px;
+    font-size: 12px;
+    text-align: center;
+    animation: fadeIn .3s ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+    border: 1px solid;
+}
+
+.status-success {
+    background: #064e3b;
+    color: #a7f3d0;
+    border-color: #047857;
+}
+
+.status-error {
+    background: #7f1d1d;
+    color: #fca5a5;
+    border-color: #dc2626;
+}
+
+.status-loading {
+    background: #0c4a6e;
+    color: #bae6fd;
+    border-color: #0369a1;
+}
+
+.status-info {
+    background: #1e3a8a;
+    color: #bfdbfe;
+    border-color: #1d4ed8;
+}
+
+.status-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+/* Summary/Plan blocks */
+.summary-section h4,
+.plan-section h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f3f4f6;
+}
+
+.summary-content,
+.plan-content {
+    background: #111827;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #d1d5db;
+    min-height: 60px;
+    max-height: 120px;
+    overflow-y: auto;
+    border: 1px solid #374151;
+}
+
+/* ADDED: Summary and plan output specific styling */
+.summary-output,
+.plan-output {
+    max-height: 200px;
+    overflow-y: auto;
+    line-height: 1.4;
+    font-size: 13px;
+    background: #111827;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #374151;
+    color: #d1d5db;
+}
+
+/* Distraction list */
+.distraction-list {
+    background: #111827;
+    border-radius: 4px;
+    padding: 8px;
+    border: 1px solid #374151;
+}
+
+.distraction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #374151;
+    transition: background-color .15s ease, padding .15s ease, margin .15s ease;
+}
+
+.distraction-item:hover {
+    background: #1e293b;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin: 0 -8px;
+}
+
+.distraction-item:last-child {
+    border-bottom: none;
+}
+
+.distraction-name {
+    color: #d1d5db;
+    font-size: 12px;
+    flex: 1;
+}
+
+.distraction-percent {
+    color: #60a5fa;
+    font-size: 11px;
+    font-weight: 700;
+    background: #1e3a8a;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Connection card */
+.connection-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #1e293b;
+    border-radius: 6px;
+    margin: 8px 0;
+    border: 1px solid #374151;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.connection-status.connected {
+    border-color: #10b981;
+    background: #064e3b;
+}
+
+.connection-status.disconnected {
+    border-color: #ef4444;
+    background: #7f1d1d;
+}
+
+.connection-status.connecting {
+    border-color: #f59e0b;
+    background: #78350f;
+}
+
+.connection-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.connection-text {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.connection-text.connected {
+    color: #10b981;
+}
+
+.connection-text.disconnected {
+    color: #fca5a5;
+}
+
+.connection-text.connecting {
+    color: #fdba74;
+}
+
+.retry-button {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    transition: transform .15s ease, background .15s ease;
+}
+
+.retry-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.retry-button:active {
+    transform: translateY(0);
+}
+
+/* Permanent retry */
+#permanent-retry-btn {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    width: 100%;
+    margin: 10px 0;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, .3);
+}
+
+#permanent-retry-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, .4);
+}
+
+#permanent-retry-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(239, 68, 68, .3);
+}
+
+/* ===== ENHANCED GRAPH STYLES ===== */
+
+/* Focus Score Graph Container */
+.focus-graph-container {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 8px;
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px solid #374151;
+    position: relative;
+}
+
+.focus-graph-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.focus-graph-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #d1d5db;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.focus-graph-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.graph-btn {
+    background: #374151;
+    border: 1px solid #4b5563;
+    color: #d1d5db;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.15s ease;
+}
+
+.graph-btn:hover {
+    background: #4b5563;
+    border-color: #6b7280;
+}
+
+/* Chart Canvas */
+.focus-chart {
+    width: 100%;
+    height: 80px;
+    border-radius: 4px;
+}
+
+/* Progress Bar */
+.focus-progress-container {
+    width: 100%;
+    height: 6px;
+    background: #374151;
+    border-radius: 3px;
+    margin: 8px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.focus-progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
+    position: relative;
+}
+
+.focus-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ffffff;
+    box-shadow: 0 0 4px #ffffff;
+}
+
+/* Score Indicators */
+.focus-score-indicators {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #9ca3af;
+}
+
+.score-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.indicator-value {
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.indicator-label {
+    font-size: 0.65rem;
+    opacity: 0.8;
+}
+
+/* Trend Indicator */
+.trend-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 8px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid #374151;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.trend-down {
+    color: #ef4444;
+}
+
+.trend-neutral {
+    color: #9ca3af;
+}
+
+.trend-arrow {
+    font-size: 0.8rem;
+}
+
+/* Graph Legend */
+.graph-legend {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 0.7rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #9ca3af;
+}
+
+.legend-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-current {
+    background: #60a5fa;
+    box-shadow: 0 0 4px #60a5fa;
+}
+
+.legend-average {
+    background: #9ca3af;
+}
+
+.legend-trend {
+    background: #10b981;
+}
+
+/* Score Level Colors */
+.focus-score.excellent {
+    color: #10b981;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.focus-score.good {
+    color: #22c55e;
+}
+
+.focus-score.fair {
+    color: #f59e0b;
+}
+
+.focus-score.poor {
+    color: #ef4444;
+}
+
+.focus-score.unknown {
+    color: #9ca3af;
+}
+
+/* Animation for score changes */
+@keyframes scorePulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.score-update {
+    animation: scorePulse 0.6s ease-in-out;
+}
+
+/* Graph Data Points */
+.data-point {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #60a5fa;
+    border: 2px solid #1e293b;
+    transform: translate(-50%, 50%);
+    transition: all 0.3s ease;
+}
+
+.data-point:hover {
+    width: 10px;
+    height: 10px;
+    background: #3b82f6;
+    box-shadow: 0 0 8px #3b82f6;
+    z-index: 10;
+}
+
+.data-point.current {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+}
+
+.data-point.current:hover {
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
+
+/* Time Labels */
+.time-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 0.65rem;
+    color: #6b7280;
+}
+
+.time-label {
+    text-align: center;
+    flex: 1;
+}
+
+/* Loading State for Graph */
+.focus-graph-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+.graph-loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #374151;
+    border-top: 2px solid #60a5fa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+/* Responsive Graph */
+@media (max-width: 380px) {
+    .focus-graph-container {
+        padding: 8px;
+    }
+
+    .focus-chart {
+        height: 60px;
+    }
+
+    .focus-score-indicators {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .graph-legend {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* Graph Tooltip */
+.graph-tooltip {
+    position: absolute;
+    background: #1e293b;
+    border: 1px solid #374151;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    color: #d1d5db;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.graph-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #374151;
+}
+
+.tooltip-date {
+    font-weight: 600;
+    color: #60a5fa;
+}
+
+.tooltip-score {
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+/* Animations */
+.connection-pulse {
+    animation: connectionPulse 2s ease-in-out infinite;
+}
+
+@keyframes connectionPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, .7);
+    }
+
+    50% {
+        opacity: .85;
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+}
+
+.loading-connection {
+    background: linear-gradient(90deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: .5
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.score-change {
+    animation: pulseScore .6s ease-in-out;
+}
+
+@keyframes pulseScore {
+    0% {
+        transform: scale(1)
+    }
+
+    50% {
+        transform: scale(1.1)
+    }
+
+    100% {
+        transform: scale(1)
+    }
+}
+
+/* Global transitions */
+* {
+    transition: background-color .15s ease, border-color .15s ease;
+}
+
+/* Global scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e293b;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Accessibility */
+button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Compact layout */
+@media (max-height: 600px) {
+    .container {
+        padding: .5rem;
+    }
+
+    .chart-container {
+        height: 80px;
+        min-height: 80px;
+    }
+
+    .list-container {
+        max-height: 120px;
+    }
+
+    .focus-mode-section {
+        margin: 10px 0;
+        padding: 10px;
+    }
+
+    .status-section {
+        margin-bottom: 10px;
+        padding: 8px;
+    }
+
+    /* ADDED: Adjust summary/plan output for compact view */
+    .summary-output,
+    .plan-output {
+        max-height: 150px;
+        font-size: 12px;
+    }
+
+    /* Enhanced graph compact styles */
+    .focus-graph-container {
+        padding: 8px;
+        margin: 8px 0;
+    }
+
+    .focus-chart {
+        height: 60px;
+    }
+
+    .focus-score-indicators {
+        margin-top: 6px;
+    }
+
+    .graph-legend {
+        margin-top: 6px;
+    }
+}
+
+/* Print */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+        width: auto;
+    }
+
+    .status-section,
+    .feature-section {
+        background: #fff;
+        border-color: #ccc;
+        color: #000;
+    }
+}

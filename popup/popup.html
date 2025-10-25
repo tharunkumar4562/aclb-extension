@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACLB - Adaptive Cognitive Load Balancer</title>
+    <style>
+        /* Keep styles local to the popup; no external @import to avoid MV3 delays */
+        body {
+            width: 380px;
+            min-height: 500px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 4px 0 0 0;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: rgba(30, 41, 59, .8);
+            border-radius: 8px;
+            margin: 0 0 16px 0;
+            border: 1px solid #334155;
+        }
+
+        .connection-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .connection-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .connection-text.connected {
+            color: #10b981;
+        }
+
+        .connection-text.disconnected {
+            color: #fca5a5;
+        }
+
+        .connection-text.connecting {
+            color: #fdba74;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-online {
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-offline {
+            background: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
+        }
+
+        .status-connecting {
+            background: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        .status-section,
+        .score-section,
+        .distractions-section,
+        .output-section {
+            background: rgba(30, 41, 59, .8);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #334155;
+        }
+
+        .status-section h3,
+        .section-title,
+        .output-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin: 0 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .status-details {
+            font-size: 12px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .status-value.connected,
+        .status-value.ready {
+            color: #10b981;
+        }
+
+        .status-value.disconnected {
+            color: #ef4444;
+        }
+
+        .status-value.initializing,
+        .status-value.fallback {
+            color: #fdba74;
+        }
+
+        .status-value.available {
+            color: #10b981;
+        }
+
+        .status-value.unavailable {
+            color: #ef4444;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all .2s ease;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+        }
+
+        .action-btn.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .last-updated {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-align: center;
+            margin: 4px 0 16px;
+        }
+
+        .score-main {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 8px 0;
+            transition: color .3s ease;
+        }
+
+        .score-good {
+            color: #10b981;
+        }
+
+        .score-medium {
+            color: #f59e0b;
+        }
+
+        .score-poor {
+            color: #ef4444;
+        }
+
+        .score-label {
+            text-align: center;
+            font-size: .8rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin: 12px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ffffff;
+            box-shadow: 0 0 4px #ffffff;
+        }
+
+        .progress-bar.score-good {
+            background: linear-gradient(90deg, #10b981 0%, #22c55e 100%);
+        }
+
+        .progress-bar.score-medium {
+            background: linear-gradient(90deg, #f59e0b 0%, #eab308 100%);
+        }
+
+        .progress-bar.score-poor {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .chart-container {
+            height: 80px;
+            background: #1e293b;
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .distraction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border: 1px solid #334155;
+        }
+
+        .distraction-name {
+            font-size: .85rem;
+            color: #e2e8f0;
+        }
+
+        .distraction-percent {
+            font-size: .8rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: all .2s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+        }
+
+        .btn-summarize {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .btn-plan {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .btn-focus {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .btn-focus-active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .btn:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn.loading {
+            background: #f59e0b;
+        }
+
+        .output-title {
+            font-size: .9rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin: 0 0 8px 0;
+        }
+
+        .output-content {
+            font-size: .8rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            border: 3px solid #334155;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            margin: 12px 0;
+            border-radius: 8px;
+            font-size: 12px;
+            text-align: center;
+            animation: fadeIn .3s ease-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+            border: 1px solid;
+        }
+
+        .status-success {
+            background: #064e3b;
+            color: #a7f3d0;
+            border-color: #047857;
+        }
+
+        .status-error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border-color: #dc2626;
+        }
+
+        .status-loading {
+            background: #0c4a6e;
+            color: #bae6fd;
+            border-color: #0369a1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .focus-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .badge-active {
+            background: #10b981;
+            color: #fff;
+            box-shadow: 0 0 8px rgba(16, 185, 129, .3);
+        }
+
+        .badge-inactive {
+            background: #6b7280;
+            color: #fff;
+        }
+
+        .actions-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Graph Controls Styles */
+        .graph-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .graph-time-range {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .graph-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .graph-btn {
+            padding: 4px 8px;
+            font-size: 10px;
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .graph-btn:hover {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+
+        /* Score Level Colors for Progress Bar */
+        .progress-bar.score-excellent {
+            background: linear-gradient(90deg, #10b981 0%, #22c55e 100%);
+        }
+
+        .progress-bar.score-good {
+            background: linear-gradient(90deg, #22c55e 0%, #84cc16 100%);
+        }
+
+        .progress-bar.score-fair {
+            background: linear-gradient(90deg, #f59e0b 0%, #eab308 100%);
+        }
+
+        .progress-bar.score-poor {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        /* Animation for progress bar updates */
+        @keyframes progressPulse {
+            0% {
+                transform: scaleX(1);
+            }
+
+            50% {
+                transform: scaleX(1.02);
+            }
+
+            100% {
+                transform: scaleX(1);
+            }
+        }
+
+        .progress-update {
+            animation: progressPulse 0.6s ease-in-out;
+        }
+
+        /* Debug Section Styles */
+        .debug-section {
+            background: rgba(30, 41, 59, .8);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #334155;
+        }
+
+        .debug-section h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin: 0 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+        }
+
+        /* Temporary debug section specific styles */
+        .debug-temp {
+            background: rgba(254, 243, 199, 0.1) !important;
+            border: 1px solid rgba(251, 191, 36, 0.3) !important;
+            margin-top: 16px;
+            padding: 12px !important;
+        }
+
+        .debug-temp h3 {
+            color: #fef3c7 !important;
+        }
+
+        .debug-temp .btn {
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+            margin-right: 8px;
+        }
+
+        .debug-output {
+            font-size: 11px;
+            margin-top: 8px;
+            font-family: monospace;
+            max-height: 96px;
+            overflow-y: auto;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">ACLB</h1>
+            <p class="subtitle">Adaptive Cognitive Load Balancer</p>
+        </div>
+
+        <!-- Status host for inline messages -->
+        <div id="status-host"></div>
+
+        <!-- Connection Status -->
+        <div class="connection-status" id="connection-status">
+            <div class="connection-info">
+                <div class="status-indicator status-connecting" id="status-indicator"></div>
+                <span class="connection-text connecting" id="connection-text">Connecting...</span>
+            </div>
+            <div id="connection-actions"></div>
+        </div>
+
+        <!-- Connection Details -->
+        <div class="status-section">
+            <h3>Connection Status</h3>
+            <div id="connection-status-details" class="status-details">
+                <div class="status-item"><span class="status-label">Connection:</span><span
+                        class="status-value disconnected" id="status-connection">Disconnected</span></div>
+                <div class="status-item"><span class="status-label">Initialized:</span><span
+                        class="status-value initializing" id="status-initialized">Initializing</span></div>
+                <div class="status-item"><span class="status-label">Mode:</span><span class="status-value fallback"
+                        id="status-mode">Normal</span></div>
+                <div class="status-item"><span class="status-label">Reconnect Attempts:</span><span class="status-value"
+                        id="status-reconnect">0</span></div>
+            </div>
+
+            <!-- Keep only the Refresh Status button here -->
+            <div class="action-buttons">
+                <button id="refresh-status" class="action-btn">Refresh Status</button>
+            </div>
+        </div>
+
+        <div id="last-updated" class="last-updated"></div>
+
+        <!-- Focus Score -->
+        <div class="score-section">
+            <h2 class="section-title">Current Focus Score</h2>
+            <div id="focus-score" class="score-main score-medium">--</div>
+            <p class="score-label">Lower score = Better focus</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div id="focus-progress" class="progress-bar" style="width: 60%;"></div>
+            </div>
+
+            <!-- Enhanced Graph Container -->
+            <div class="chart-container">
+                <canvas id="focus-chart" class="chart-canvas" width="300" height="80"></canvas>
+            </div>
+
+            <!-- Graph Controls -->
+            <div class="graph-controls">
+                <span class="graph-time-range">Last 7 days</span>
+                <div class="graph-buttons">
+                    <button id="refresh-graph" class="graph-btn">🔄</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distractions -->
+        <div class="distractions-section">
+            <h2 class="section-title">Top Distractions</h2>
+            <div id="distraction-list">
+                <div class="distraction-item">
+                    <span class="distraction-name">Loading analytics...</span>
+                    <span class="distraction-percent">--%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Mode -->
+        <div class="score-section">
+            <h2 class="section-title">Focus Mode</h2>
+            <button id="focus-mode-btn" class="btn btn-focus">🟢 Activate Focus Mode</button>
+            <div class="status-row"
+                style="display:flex; justify-content:space-between; align-items:center; margin:8px 0;">
+                <span id="focus-mode-status" class="connection-text" style="font-size:.8rem;">Focus Mode:
+                    INACTIVE</span>
+                <span id="focus-badge" class="focus-badge badge-inactive">OFF</span>
+            </div>
+            <div style="font-size:.7rem; color:#94a3b8; text-align:center; margin-top:8px;">Blocks distractions and
+                enhances content focus</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-section">
+            <button id="summarize-btn" class="btn btn-summarize">📚 Summarize Current Page</button>
+            <button id="focus-plan-btn" class="btn btn-plan">🎯 Generate Focus Plan</button>
+        </div>
+
+        <!-- Output Areas -->
+        <div class="output-section">
+            <h3 class="output-title">Page Summary</h3>
+            <div id="summary-output" class="output-content">Click "Summarize Current Page" to analyze this page's
+                content...</div>
+        </div>
+        <div class="output-section">
+            <h3 class="output-title">Focus Plan</h3>
+            <div id="plan-output" class="output-content">Click "Generate Focus Plan" for personalized recommendations...
+            </div>
+        </div>
+
+        <!-- Temporary debug section - remove after testing -->
+        <div class="debug-section debug-temp">
+            <h3 class="font-bold text-sm mb-2">🧪 Debug Tools</h3>
+            <button id="debug-picker" class="btn btn-warning text-xs py-1 px-2 mr-2">
+                Test Element Picker
+            </button>
+            <button id="debug-connection" class="btn btn-secondary text-xs py-1 px-2">
+                Test Connection
+            </button>
+            <div id="debug-output" class="debug-output"></div>
+        </div>
+
+        <!-- Diagnostics -->
+        <div class="status-section">
+            <h3>Diagnostics</h3>
+            <pre id="diagnostics"
+                style="font-size:11px; color:#9ca3af; background:#0f172a; padding:8px; border-radius:8px; border:1px solid #334155; min-height:60px;"></pre>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div style="background:#1e293b; padding:24px; border-radius:12px; text-align:center; border:1px solid #334155;">
+            <div class="loading-spinner"></div>
+            <p id="loading-message" style="color:#e2e8f0; margin-top:12px; font-size:.9rem;">Processing...</p>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
