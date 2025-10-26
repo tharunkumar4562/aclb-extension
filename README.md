@@ -1,8 +1,8 @@
 ACLB - Adaptive Cognitive Load Balancer
-A sophisticated Chrome extension that monitors cognitive load and enhances focus through intelligent browsing assistance.
+A Chrome extension that monitors cognitive load and enhances focus through intelligent browsing assistance.
 
 Overview
-ACLB addresses the growing challenge of digital cognitive overload by providing real-time focus monitoring and proactive intervention. Unlike traditional website blockers that use restrictive measures, ACLB employs behavioral analytics and AI-powered assistance to help users maintain optimal focus during browsing sessions.
+ACLB addresses digital cognitive overload by providing real-time focus monitoring and proactive intervention. Unlike traditional website blockers that use restrictive measures, ACLB employs behavioral analytics and AI-powered assistance to help users maintain optimal focus during browsing sessions.
 
 Core Features
 Cognitive Load Monitoring
@@ -35,7 +35,6 @@ Trend Analysis: Seven-day focus pattern visualization and distraction source tra
 Technical Implementation
 Architecture
 text
-
 <details>
   <summary>📂 Project Structure</summary>
 
@@ -57,8 +56,9 @@ ACLB-EXTENSION/
 │   └── focus-analyzer.js
   </pre>
 </details>
-    
 System Components
+
+
 Background Service Worker
 
 Manages extension lifecycle and state persistence
@@ -242,8 +242,4 @@ This project is licensed under the MIT License. See LICENSE file for complete de
 Acknowledgments
 Development of ACLB incorporated research from cognitive psychology principles and human-computer interaction best practices to create an effective digital focus assistant.
 
-ACLB represents a practical approach to managing digital cognitive load through intelligent browsing assistance and proactive focus maintenance.
-
-ve it a try. You might be surprised how much difference a little intelligent assistance can make.
-
-
+ACLB represents a practical approach to managing digital cognitive load through intelligent browsing assistance and proactive focus maintenance. Give it a try - you might be surprised how much difference intelligent assistance can make.
